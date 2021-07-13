@@ -30,7 +30,7 @@ class SecondViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupBackButton()
+        removeBackButtonTitle()
     }
     
     override func viewWillAppear(_ animated: Bool) {

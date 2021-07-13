@@ -11,6 +11,8 @@ public class CustomNavigtionController: UINavigationController, UIGestureRecogni
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        navigationBar.backIndicatorImage = UINavigationController.backButtonImage
+        navigationBar.backIndicatorTransitionMaskImage = UINavigationController.backButtonImage
         navigationBar.barTintColor = .cyan  // не работает на увеличенном размере prefersLargeTitles = true
         navigationBar.titleTextAttributes = navigationBar.blackTitleTextAttribute
         
@@ -32,25 +34,10 @@ public class CustomNavigtionController: UINavigationController, UIGestureRecogni
 
 
 public extension UIViewController {
-    // Вариант 1
-    // Устанавливаем leftButton в качестве backButton
-    // Нюанс: не работает родное контекстное меню кнопки Назад
-    func setupBackButton() {
-        guard let navigationController = navigationController,
-              navigationController.viewControllers.count > 1 else {
-            return }
-        navigationItem.hidesBackButton = true
-        let backButton = UIBarButtonItem(image: UINavigationController.backButtonImage,
-                                         style: .plain,
-                                         target: self,
-                                         action: #selector(backButtonPressed))
-        backButton.accessibilityLabel = "Назад"
-        navigationItem.leftBarButtonItem = backButton
-    }
-    
-    /// private native 'pop' functionality
-    @objc private func backButtonPressed() {
-        navigationController?.popViewController(animated: true)
+    // Используя нативную backButton удаляем её title
+    func removeBackButtonTitle() {
+        let backButton = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem = backButton
     }
     
     // public trigger
@@ -58,24 +45,6 @@ public extension UIViewController {
     @objc func didTapBackButton() {
         // method for override
     }
-    
-    
-    /*
-     // Вариант 2
-     // Используем нативную backButton
-     
-    func removeBackButtonTitle() {
-        let backButton = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
-        navigationItem.backBarButtonItem = backButton
-    }
-     
-     override func willMove(toParent parent: UIViewController?) {
-         super.willMove(toParent: parent)
-         if parent == nil {
-             print("Pressed backButton or swiped back")
-         }
-     }
-      */
     
     func addTwoLinesTitle(first: String, second: String) {
         let stackView = UIStackView()
