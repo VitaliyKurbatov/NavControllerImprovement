@@ -76,6 +76,27 @@ public extension UIViewController {
          }
      }
       */
+    
+    func addTwoLinesTitle(first: String, second: String) {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        
+        let firstLabel = UILabel()
+        firstLabel.font = UIFont.boldSystemFont(ofSize: 23)
+        firstLabel.textAlignment = .center
+        
+        let secondLabel = UILabel()
+        secondLabel.font = UIFont.boldSystemFont(ofSize: 23)
+        secondLabel.textAlignment = .center
+        
+        [firstLabel, secondLabel].forEach { stackView.addArrangedSubview($0) }
+        
+        firstLabel.text = first
+        secondLabel.text = second
+        
+        navigationItem.titleView = stackView
+    }
 }
 
 public extension UINavigationController {

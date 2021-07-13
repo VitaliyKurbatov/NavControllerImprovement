@@ -38,7 +38,7 @@ class ThirdViewController: UIViewController {
     private func setupView() {
         view.backgroundColor = .white
         title = "Third VC"
-        addTwoLinesTitle()
+        addTwoLinesTitle(first: "First label", second: "Second label")
         
         view.addSubview(tableView)
         NSLayoutConstraint.activate([
@@ -47,28 +47,6 @@ class ThirdViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
-    }
-    
-    func addTwoLinesTitle() {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        
-        let firstLabel = UILabel()
-        firstLabel.font = UIFont.boldSystemFont(ofSize: 23)
-        firstLabel.textAlignment = .center
-        
-        let secondLabel = UILabel()
-        secondLabel.font = UIFont.boldSystemFont(ofSize: 23)
-        secondLabel.textAlignment = .center
-        
-        [firstLabel, secondLabel].forEach { stackView.addArrangedSubview($0) }
-        
-        firstLabel.text = "First label"
-        secondLabel.text = "Second label"
-        
-        navigationItem.titleView = stackView
     }
 }
 
