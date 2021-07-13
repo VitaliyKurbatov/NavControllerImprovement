@@ -32,7 +32,6 @@ public class CustomNavigtionController: UINavigationController, UIGestureRecogni
 
 
 public extension UIViewController {
-    // Вариант 1
     // Устанавливаем leftButton в качестве backButton
     // Нюанс: не работает родное контекстное меню кнопки Назад
     func setupBackButton() {
@@ -58,24 +57,6 @@ public extension UIViewController {
     @objc func didTapBackButton() {
         // method for override
     }
-    
-    
-    /*
-     // Вариант 2
-     // Используем нативную backButton
-     
-    func removeBackButtonTitle() {
-        let backButton = UIBarButtonItem(title: nil, style: .plain, target: nil, action: nil)
-        navigationItem.backBarButtonItem = backButton
-    }
-     
-     override func willMove(toParent parent: UIViewController?) {
-         super.willMove(toParent: parent)
-         if parent == nil {
-             print("Pressed backButton or swiped back")
-         }
-     }
-      */
     
     func addTwoLinesTitle(first: String, second: String) {
         let stackView = UIStackView()
