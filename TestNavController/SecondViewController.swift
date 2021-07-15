@@ -38,6 +38,16 @@ class SecondViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
+    override func willTapBackButton() -> Bool {
+        let alert = UIAlertController(title: "Уверен?", message: nil, preferredStyle: .alert)
+        let action = UIAlertAction(title: "Да", style: .cancel, handler: { [weak self] _ in
+            self?.popForce()
+        })
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+        return false
+    }
+    
     override func didTapBackButton() {
         print("didTapBackButton on \(String(describing: Self.self))")
     }

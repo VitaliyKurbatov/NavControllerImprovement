@@ -8,11 +8,14 @@
 import UIKit
 
 public class CustomNavigtionController: UINavigationController, UIGestureRecognizerDelegate {
+    lazy var backButtonImage: UIImage = {
+        return UIImage(named: "back_arrow_left_black")!.withRenderingMode(.alwaysTemplate).tinted(with: .purple)
+    }()
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        navigationBar.backIndicatorImage = UINavigationController.backButtonImage
-        navigationBar.backIndicatorTransitionMaskImage = UINavigationController.backButtonImage
+        navigationBar.backIndicatorImage = backButtonImage
+        navigationBar.backIndicatorTransitionMaskImage = backButtonImage
         navigationBar.barTintColor = .cyan  // не работает на увеличенном размере prefersLargeTitles = true
         navigationBar.titleTextAttributes = navigationBar.blackTitleTextAttribute
         
@@ -21,9 +24,23 @@ public class CustomNavigtionController: UINavigationController, UIGestureRecogni
     
     // триггерим нажатие кнопки Назад
     public override func popViewController(animated: Bool) -> UIViewController? {
-        let vc = super.popViewController(animated: animated)
+        if _willTapBackButton() {
+            let vc = super.popViewController(animated: animated)
+            vc?.didTapBackButton()
+            return vc
+        }
+        return nil
+    }
+    
+    private func _willTapBackButton() -> Bool {
+        return viewControllers.last?.willTapBackButton() ?? true
+    }
+    
+    fileprivate func _popForce() {
+        // если ставить анимацию true, то метод не сработает при свайпе
+        // при простом нажатии всё работает хорошо в любом случае
+        let vc = super.popViewController(animated: false)
         vc?.didTapBackButton()
-        return vc
     }
     
     // активируем свайп назад
@@ -40,10 +57,32 @@ public extension UIViewController {
         navigationItem.backBarButtonItem = backButton
     }
     
-    // public trigger
-    // из-за objc диспетчеризация будет медленнее. Для данного функционала вроде не критично
+    // MARK: - public triggers for backButton
+    // из-за objc диспетчеризация будет медленнее. Для данного функционала вроде не критично.
+    /**
+     Сообщает о нажатии backButton либо свайпе назад
+     - Returns:
+     true - если нужно выполнить обычный popViewController;
+     false - если нужно запретить выполнение pop.
+     */
+    @objc func willTapBackButton() -> Bool {
+        // method for override
+        return true
+    }
+    
+    /**
+     Сообщает о выполнении метода popViewController
+     */
     @objc func didTapBackButton() {
         // method for override
+    }
+    
+    /**
+     Принудительное выполнение метода popViewController
+     */
+    func popForce() {
+        guard let customNavController = navigationController as? CustomNavigtionController else { return }
+        customNavController._popForce()
     }
     
     func addTwoLinesTitle(first: String, second: String) {
@@ -68,11 +107,6 @@ public extension UIViewController {
     }
 }
 
-public extension UINavigationController {
-    // В экстеншине нельзя хранить lazy поэтому
-    // использован static let, так как он создается один раз как и lazy.
-    static let backButtonImage = UIImage(named: "back_arrow_left_black")!.withRenderingMode(.alwaysTemplate).tinted(with: .purple)
-}
 
 public extension UINavigationBar {
     var blackTitleTextAttribute: [NSAttributedString.Key : Any] {
