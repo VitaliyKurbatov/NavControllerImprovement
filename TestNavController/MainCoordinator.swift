@@ -8,7 +8,7 @@
 import UIKit
 
 class MainCoordinator {
-    let window: UIWindow?
+    let window: UIWindow
     let firstViewController = FirstViewController()
     
     init(window: UIWindow?) {
@@ -22,7 +22,7 @@ class MainCoordinator {
         let navController = CustomNavigtionController(rootViewController: firstViewController)
         navController.isNavigationBarHidden = false
         
-        window?.rootViewController = navController
-        window?.makeKeyAndVisible()
+        window.rootViewController = navController
+        window.makeKeyAndVisible()
     }
 }
