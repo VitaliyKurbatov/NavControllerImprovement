@@ -24,7 +24,7 @@ public class CustomNavigtionController: UINavigationController, UIGestureRecogni
     
     // триггерим нажатие кнопки Назад
     public override func popViewController(animated: Bool) -> UIViewController? {
-        if _willTapBackButton() {
+        if isPopAllowed() {
             let vc = super.popViewController(animated: animated)
             vc?.didTapBackButton()
             return vc
@@ -32,7 +32,7 @@ public class CustomNavigtionController: UINavigationController, UIGestureRecogni
         return nil
     }
     
-    private func _willTapBackButton() -> Bool {
+    private func isPopAllowed() -> Bool {
         return viewControllers.last?.willTapBackButton() ?? true
     }
     
