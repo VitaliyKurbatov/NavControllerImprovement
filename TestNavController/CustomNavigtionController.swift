@@ -12,6 +12,10 @@ public class CustomNavigtionController: UINavigationController, UIGestureRecogni
         return UIImage(named: "back_arrow_left_black")!.withRenderingMode(.alwaysTemplate).tinted(with: .purple)
     }()
     
+    private var isPopAllowed: Bool {
+        return viewControllers.last?.willTapBackButton() ?? true
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         navigationBar.backIndicatorImage = backButtonImage
@@ -24,23 +28,17 @@ public class CustomNavigtionController: UINavigationController, UIGestureRecogni
     
     // триггерим нажатие кнопки Назад
     public override func popViewController(animated: Bool) -> UIViewController? {
-        if isPopAllowed() {
-            let vc = super.popViewController(animated: animated)
-            vc?.didTapBackButton()
-            return vc
+        if isPopAllowed {
+            pop(animated: animated)
         }
         return nil
     }
     
-    private func isPopAllowed() -> Bool {
-        return viewControllers.last?.willTapBackButton() ?? true
-    }
-    
-    fileprivate func _popForce() {
-        // если ставить анимацию true, то метод не сработает при свайпе
-        // при простом нажатии всё работает хорошо в любом случае
-        let vc = super.popViewController(animated: false)
+    @discardableResult
+    fileprivate func pop(animated: Bool) -> UIViewController? {
+        let vc = super.popViewController(animated: animated)
         vc?.didTapBackButton()
+        return vc
     }
     
     // активируем свайп назад
@@ -82,7 +80,9 @@ public extension UIViewController {
      */
     func popForce() {
         guard let customNavController = navigationController as? CustomNavigtionController else { return }
-        customNavController._popForce()
+        // если ставить анимацию true, то метод не сработает при свайпе
+        // при простом нажатии всё работает хорошо в любом случае
+        customNavController.pop(animated: false)
     }
     
     func addTwoLinesTitle(first: String, second: String) {
